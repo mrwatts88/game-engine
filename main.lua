@@ -3,6 +3,7 @@ DEV = true
 push = require 'push'
 Class = require 'class'
 require 'Player'  
+require 'RigidBody'
 
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
@@ -28,7 +29,8 @@ local BACKGROUND_LOOPING_POINT = 413
 -- point at which we should loop our ground back to X 0
 local GROUND_LOOPING_POINT = 514
 
-local player = Player()
+local playerRigidBody = RigidBody(100, VIRTUAL_HEIGHT - 32, 32, 32)
+local player = Player(playerRigidBody)
 
 function love.load()
     -- love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -62,13 +64,14 @@ end
 
 function love.update(dt)
     -- scroll background by preset speed * dt, looping back to 0 after the looping point
-    backgroundScroll = (backgroundScroll + player.dx * 9.0 * dt) 
+    backgroundScroll = (backgroundScroll + playerRigidBody.xv * 9.0 * dt) 
         % BACKGROUND_LOOPING_POINT
 
     -- scroll ground by preset speed * dt, looping back to 0 after the screen width passes
-    groundScroll = (groundScroll + player.dx * dt) 
+    groundScroll = (groundScroll + playerRigidBody.xv * dt) 
         % GROUND_LOOPING_POINT
 
+    playerRigidBody:update(dt)
     player:update(dt)
 
     love.keyboard.keysPressed = {}
@@ -76,8 +79,9 @@ end
 
 function love.draw()
     push:start()
-    love.graphics.draw(background, -backgroundScroll, 0)
-    love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT - 16)
+    --love.graphics.draw(background, -backgroundScroll, 0)
+    --love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT - 16)
+    love.graphics.clear(1,1,1)
     player:render()
     push:finish()
 end
