@@ -4,6 +4,7 @@ push = require 'push'
 Class = require 'class'
 require 'Player'  
 require 'RigidBody'
+require 'CollisionDetector'
 
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
@@ -30,7 +31,12 @@ local BACKGROUND_LOOPING_POINT = 413
 local GROUND_LOOPING_POINT = 514
 
 local playerRigidBody = RigidBody(100, VIRTUAL_HEIGHT - 32, 32, 32)
+local playerRigidBody2 = RigidBody(300, VIRTUAL_HEIGHT - 32, 32, 32)
 local player = Player(playerRigidBody)
+local player2 = Player(playerRigidBody2)
+
+local rigidBodies = { playerRigidBody, playerRigidBody2 }
+local collisionDetector = CollisionDetector(rigidBodies)
 
 function love.load()
     -- love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -62,6 +68,10 @@ function love.keyboard.wasPressed(key)
     return love.keyboard.keysPressed[key]
 end
 
+function love.conf(t)
+  t.console = true
+end
+
 function love.update(dt)
     -- scroll background by preset speed * dt, looping back to 0 after the looping point
     backgroundScroll = (backgroundScroll + playerRigidBody.xv * 9.0 * dt) 
@@ -72,7 +82,10 @@ function love.update(dt)
         % GROUND_LOOPING_POINT
 
     playerRigidBody:update(dt)
+    playerRigidBody2:update(dt)
     player:update(dt)
+
+    collisionDetector:run()
 
     love.keyboard.keysPressed = {}
 end
@@ -83,5 +96,6 @@ function love.draw()
     --love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT - 16)
     love.graphics.clear(1,1,1)
     player:render()
+    player2:render()
     push:finish()
 end

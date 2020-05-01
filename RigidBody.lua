@@ -8,6 +8,7 @@ function RigidBody:init(x, y, width, height)
   self.y = y
   self.width = width
   self.height = height
+  self.AABB = { min=self.x, max=self.y + self.height }
   self.xv = 0
   self.yv = 0
   self.xa = 0
@@ -47,6 +48,8 @@ function RigidBody:update(dt)
 
   self.x = self.x + self.xv * dt
   self.y = self.y + self.yv * dt
+
+  self.AABB = { min=self.x, max=self.y + self.height }
 end
 
 function RigidBody:applyForce(x, y, dt)
