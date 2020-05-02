@@ -14,7 +14,7 @@ function Vector:subtract(other)
 end
 
 function Vector:dot(other)
-  return self.x * other.x + self.y + other.y
+  return self.x * other.x + self.y * other.y
 end
 
 function Vector:scale(scale)
@@ -56,6 +56,11 @@ function Vector:angleBetween(other)
   cosineAngle = dotProduct / magSelf * magOther
 
   return math.cos(cosineAngle)
+end
+
+-- returns magnitude only
+function Vector:cross(other)
+  return self:magnitude()*other:magnitude()*math.sin(self.angleBetween(other))
 end
 
 function Vector:rotate(angle)

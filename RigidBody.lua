@@ -2,23 +2,23 @@ require "Vector"
 
 RigidBody = Class{}
 
-GRAVITY = 1000
+GRAVITY = -1000
 FRICTION = 10
 
-function RigidBody:init(x, y, width, height)
+function RigidBody:init(x, y, width, height, useGravity)
   self.pos = Vector(x, y)
   self.vel = Vector(0, 0)
   self.acc = Vector(0, 0)
   self.width = width
   self.height = height
+  self.restitution = 1
+  self.mass = 1
 
   self.maxVel = Vector(500, 2000)
   self.maxAcc = Vector(2000, 2000)
 
-  self.useGravity = false
-   
-  if self.useGravity then
-    self.ya = GRAVITY
+  if useGravity then
+    self.acc = Vector(0, GRAVITY)
   end
 end
 
@@ -74,5 +74,13 @@ function RigidBody:applyForce(force, dt)
   if math.abs(self.vel.x) < 60 and self.vel.x * force.x < 0 then
     self.vel.x = 0
   end
+end
+
+function RigidBody:min()
+  return Vector(self.pos.x - self.width / 2, self.pos.y - self.height / 2)
+end
+
+function RigidBody:max()
+  return Vector(self.pos.x + self.width / 2, self.pos.y + self.height / 2)
 end
 

@@ -32,18 +32,17 @@ local BACKGROUND_LOOPING_POINT = 413
 -- point at which we should loop our ground back to X 0
 local GROUND_LOOPING_POINT = 514
 
-local groundRigidBody = RigidBody(VIRTUAL_WIDTH / 2, GROUND_HEIGHT / 2, VIRTUAL_WIDTH, GROUND_HEIGHT)
-groundRigidBody.mass = 1e9
-local playerRigidBody = RigidBody(100, groundRigidBody.pos.y + 26, 32, 32, true)
-local enemyRigidBody = RigidBody(300,  groundRigidBody.pos.y + 26, 32, 32, true)
+local playerRigidBody = RigidBody(100, 16 + GROUND_HEIGHT, 32, 32, true)
+local enemyRigidBody = RigidBody(300, 16 + GROUND_HEIGHT, 32, 32, true)
+local groundRigidBody = RigidBody(0, GROUND_HEIGHT / 2, VIRTUAL_WIDTH, GROUND_HEIGHT)
 local player = Player(playerRigidBody, 'player')
 local enemy = Player(enemyRigidBody)
 local ground = Player(groundRigidBody)
 
---local rigidBodies = { playerRigidBody, groundRigidBody }
-local rigidBodies = { playerRigidBody, enemyRigidBody, groundRigidBody }
--- local renderedBodies = {player, ground }
-local renderedBodies = {player, enemy, ground }
+local rigidBodies = { groundRigidBody, playerRigidBody }
+-- local rigidBodies = { playerRigidBody, enemyRigidBody, groundRigidBody }
+local renderedBodies = {player, ground }
+-- local renderedBodies = {player, enemy, ground }
 local collisionDetector = CollisionDetector(rigidBodies)
 
 function love.load()
