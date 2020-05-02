@@ -3,21 +3,17 @@ require "Vector"
 CollisionResolver = Class{}
 
 
-function CollisionResolver:run(a, b, normal)
+function CollisionResolver:run(a, b, manifold)
+  normal = manifold.normal
+  penetration = manifold.penetration
+
   relativeVelocity = b.vel:subtract(a.vel)
-  -- print(relativeVelocity.x .. " : " .. relativeVelocity.y)
-  -- print(b.vel.y)
   velocityAlongNormal = relativeVelocity:dot(normal)
-  -- print(a.vel.x .. " : " .. a.vel.y .. " : " .. b.vel.x .. " : " .. b.vel.y)
   
-  print(normal.y .. " : " .. relativeVelocity.y .. " : " .. velocityAlongNormal)
   -- don't resolve if the objects are separating
   if(velocityAlongNormal > 0) then
     return
   end
-
-  -- print(velocityAlongNormal)
-  -- print(velocityAlongNormal .. " - " .. a.vel.x )
 
   e = math.min(a.restitution, b.restitution)
 
@@ -29,5 +25,15 @@ function CollisionResolver:run(a, b, normal)
   impulse = normal:scale(j)
   a.vel = a.vel:subtract(impulse:scale(1 / a.mass))
   b.vel = b.vel:add(impulse:scale(1 / b.mass))
+
+  -- correct position to account for floating point errors (prevents sinking)
+  percent = 1
+  slop = 0.01
+
+  correctionMagnitude = math.max(penetration - slop,  0) / (1 / a.mass + 1 / b.mass) * percent
+  correction = normal:scale(correctionMagnitude)
+
+  a.pos = a.pos:subtract(correction:scale(1 / a.mass))
+  b.pos = b.pos:add(correction:scale(1 / b.mass))
 end
 

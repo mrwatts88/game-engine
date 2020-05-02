@@ -19,10 +19,10 @@ function Player:update(dt)
       -- is airborne
     elseif love.keyboard.isDown("right") then
       self.animation.currentTime = self.animation.currentTime + dt
-      self.rigidBody:applyForce(Vector(4000, 0), dt)
+      self.rigidBody:applyForce(Vector(2000, 0), dt)
     elseif love.keyboard.isDown("left") then
       self.animation.currentTime = self.animation.currentTime - dt
-      self.rigidBody:applyForce(Vector(-4000, 0), dt)
+      self.rigidBody:applyForce(Vector(-2000, 0), dt)
     else
       if self.rigidBody:min().y <= GROUND_HEIGHT then
         self.rigidBody:applyForce(Vector(-3.5*self.rigidBody.vel.x, 0), dt)
@@ -35,11 +35,11 @@ function Player:update(dt)
     end
 
     if love.keyboard.wasPressed("space") then
-      if self.rigidBody.vel.y > 0 and self.canDoubleJump then
-        self.rigidBody:applyForce(Vector(0, -2000), dt)
+      if self.rigidBody.vel.y < 0 and self.canDoubleJump then
+        self.rigidBody:applyForce(Vector(0, 40000), dt)
         self.canDoubleJump = false
-      elseif self.rigidBody.acc.y == 0 then
-        self.rigidBody:applyForce(Vector(0, 2000), dt)
+      elseif self.rigidBody:min().y <= GROUND_HEIGHT then
+        self.rigidBody:applyForce(Vector(0, 30000), dt)
       end
     end
   end

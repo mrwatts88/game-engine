@@ -11,7 +11,7 @@ function RigidBody:init(x, y, width, height, useGravity)
   self.acc = Vector(0, 0)
   self.width = width
   self.height = height
-  self.restitution = 1
+  self.restitution = 0.1
   self.mass = 1
 
   self.maxVel = Vector(500, 2000)

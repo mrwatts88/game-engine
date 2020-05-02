@@ -16,8 +16,8 @@ function CollisionDetector:run()
       a = self.rigidBodies[i]
       b = self.rigidBodies[j]
       
-      normal = self:collides(a, b)
-      if normal then
+      manifold = self:collides(a, b)
+      if manifold then
         if DEV == true then
           -- print("collision detected!")
           love.graphics.push()
@@ -26,7 +26,7 @@ function CollisionDetector:run()
           love.graphics.pop()
         end
 
-        self.collisionResolver:run(a, b, normal)
+        self.collisionResolver:run(a, b, manifold)
        end
     end
   end
@@ -58,15 +58,15 @@ function CollisionDetector:collides(a, b)
       -- find out which axis is the axis of least penetration
       if y_overlap > x_overlap then
         if n.x < 0 then
-          return Vector(-1, 0)
+          return { normal=Vector(-1, 0), penetration=x_overlap }
         else
-          return Vector(1, 0)
+          return { normal=Vector(1, 0), penetration=x_overlap }
         end
       else
         if n.y < 0 then
-          return Vector(0, -1)
+          return { normal=Vector(0, -1), penetration=y_overlap }
         else
-          return Vector(0, 1)
+          return { normal=Vector(0, 1), penetration=y_overlap }
         end
       end
     end
