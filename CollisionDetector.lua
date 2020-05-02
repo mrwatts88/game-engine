@@ -5,6 +5,7 @@ function CollisionDetector:init(rigidBodies)
 end
 
 function CollisionDetector:run()
+  print("-------------")
   count = #self.rigidBodies
 
   for i = 1, count do
@@ -17,24 +18,24 @@ function CollisionDetector:run()
 end
 
 function CollisionDetector:collides(a, b)
-  d1x = b.x - a.x + a.width
-  d1y = b.y - a.y + a.height
-  d2x = a.x - b.x + b.width
-  d2y = a.y - b.y + b.height
+  d1x = b.pos.x - a.pos.x + a.width
+  d1y = b.pos.y - a.pos.y + a.height
+  d2x = a.pos.x - b.pos.x + b.width
+  d2y = a.pos.y - b.pos.y + b.height
 
-  if b.x > a.x + a.width then
+  if b.pos.x > a.pos.x + a.width then
     return false
   end
 
-  if b.x + b.width < a.x then
+  if b.pos.x + b.width < a.pos.x then
     return false
   end
 
-  if b.y > a.y + a.height then
+  if b.pos.y > a.pos.y + a.height then
     return false
   end
 
-  if b.y + b.height < a.y then
+  if b.pos.y + b.height < a.pos.y then
     return false
   end
 
